@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Discord Test Game</title>
+  <script src="https://discord.com/assets/embedded-app-sdk.js"></script>
+</head>
+<body>
+  <h1>Click Game</h1>
+  <p id="score">Score: 0</p>
+  <button onclick="incrementScore()">Click Me!</button>
+
+  <script>
+    const clientId = 'YOUR_CLIENT_ID'; // Replace with your Discord App ID
+    const discordSdk = new DiscordSDK(clientId);
+
+    let score = 0;
+
+    async function init() {
+      await discordSdk.ready();
+      await discordSdk.authorize({ client_id: clientId, scopes: ['identify', 'rpc'] });
+      await discordSdk.authenticate();
+    }
+
+    function incrementScore() {
+      score++;
+      document.getElementById('score').textContent = `Score: ${score}`;
+    }
+
+    init();
+  </script>
+</body>
+</html>
