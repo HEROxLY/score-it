@@ -1,32 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Discord Test Game</title>
+  <title>Click Game with Discord SDK</title>
   <script src="https://discord.com/assets/embedded-app-sdk.js"></script>
 </head>
 <body>
   <h1>Click Game</h1>
   <p id="score">Score: 0</p>
-  <button onclick="incrementScore()">Click Me!</button>
+  <button id="clickBtn">Click Me!</button>
 
   <script>
-    const clientId = 'YOUR_CLIENT_ID'; // Replace with your Discord App ID
+    const clientId = 'YOUR_CLIENT_ID'; // Replace with your real client ID
     const discordSdk = new DiscordSDK(clientId);
 
     let score = 0;
 
-    async function init() {
-      await discordSdk.ready();
-      await discordSdk.authorize({ client_id: clientId, scopes: ['identify', 'rpc'] });
-      await discordSdk.authenticate();
-    }
-
-    function incrementScore() {
+    document.getElementById("clickBtn").addEventListener("click", () => {
       score++;
-      document.getElementById('score').textContent = `Score: ${score}`;
+      document.getElementById("score").textContent = `Score: ${score}`;
+    });
+
+    async function initDiscord() {
+      try {
+        console.log("SDK: waiting for ready...");
+        await discordSdk.ready();
+        console.log("SDK: ready");
+
+        await discordSdk.authorize({
+          client_id: clientId,
+          scopes: ['identify', 'rpc']
+        });
+        console.log("SDK: authorized");
+
+        const auth = await discordSdk.authenticate();
+        console.log("SDK: authenticated", auth);
+      } catch (e) {
+        console.error("Discord SDK init error:", e);
+      }
     }
 
-    init();
+    initDiscord();
   </script>
 </body>
 </html>
